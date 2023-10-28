@@ -163,10 +163,9 @@ function createElement(type, props, ...children) {//创建虚拟节点
       shouldYield = deadline.timeRemaining() < 1
     }
   
-    if (!nextUnitOfWork && wipRoot) {//没有单元任务就提交
+    if (!nextUnitOfWork && wipRoot) {//没有单元任务就提交渲染
       commitRoot()
     }
-  
     requestIdleCallback(workLoop)
   }
   
