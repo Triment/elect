@@ -60,3 +60,15 @@ export  function performUnitOfWork(fiber: FiberType) {
       nextFiber = nextFiber.parent
     }
   }
+
+  function loop(deadline){
+    while(1){
+      if(deadline.timeRemaining() < 1){
+        break;
+      }
+      console.warn(`线程占用`);
+    }
+    requestIdleCallback(loop);
+  }
+
+  requestIdleCallback(loop);

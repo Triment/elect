@@ -22,11 +22,7 @@ function createElement(type, props, ...children) {//创建虚拟节点
       },
     }
   }
-  /**
-   * 创建dom
-   * @param {any} fiber 
-   * @returns 
-   */
+  //创建dom
   function createDom(fiber) {//从fiber创建dom
     const dom =
       fiber.type == "TEXT_ELEMENT"
@@ -45,9 +41,7 @@ function createElement(type, props, ...children) {//创建虚拟节点
     prev[key] !== next[key]//isNew(prev, next)(key)比较节点的key
   const isGone = (prev, next) => key => !(key in next)//key不在下个节点，表示可以删除这个key
 
-  /**
-   * 更新和创建dom
-   */
+  //更新和创建dom
   function updateDom(dom, prevProps, nextProps) {//更新虚拟dom
     //Remove old or changed event listeners
     Object.keys(prevProps)
@@ -274,11 +268,7 @@ function createElement(type, props, ...children) {//创建虚拟节点
     }
     reconcileChildren(fiber, fiber.props.children)
   }
-  /**
-   * 
-   * @param {*} wipFiber 
-   * @param {*} elements 
-   */
+  //
   function reconcileChildren(wipFiber, elements) {
     let index = 0
     let oldFiber =
@@ -342,7 +332,7 @@ function createElement(type, props, ...children) {//创建虚拟节点
     render,
     useState,
   }
-  
+  export default Didact
   /** @jsx Didact.createElement */
   function Counter() {
     const [state, setState] = Didact.useState(1)
