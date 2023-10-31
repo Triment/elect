@@ -12,13 +12,13 @@
     "downlevelIteration": true,
     "skipLibCheck": true,
     "jsx": "react-jsx",
-    "jsxImportSource": "",
+    "jsxImportSource": "react",
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,
-    // "types": [
-    //   "bun-types", // add Bun global
-    //   "dom"
-    // ]
+    "types": [
+      "bun-types", // add Bun global
+      "dom"
+    ]
   }
 }
