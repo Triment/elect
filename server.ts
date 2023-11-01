@@ -24,11 +24,11 @@ router.GET("/*assetPath", async (context) =>{
 
     const homeHtml = readFileSync('./index.html', 'utf8')
     const componentString = await renderReactComponent(path);
-    const resText = homeHtml.replace('anything', componentString)
+    const resText = homeHtml.replace('anything', componentString!)
     return new Response()
 })
 
-const fetch = (req: Request)=> router.matchRoute(req);
+const fetch = async(req: Request)=> await router.matchRoute(req);
 
 Bun.serve({
     port: 3000,

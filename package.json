@@ -9,7 +9,7 @@
   },
   "type": "module",
   "dependencies": {
-    "@triment/sweet.js": "^0.0.6",
+    "@triment/sweet.js": "^0.0.7",
     "@types/react": "^18.2.33",
     "@types/react-dom": "^18.2.14",
     "react": "^18.2.0",
