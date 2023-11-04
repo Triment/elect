@@ -1,8 +1,10 @@
-import { createRouter } from '@triment/sweet.js'
-import { existsSync, watch } from 'fs';
+import { createRouter } from '@triment/sweet.js';
+import { existsSync, rmdirSync, watch } from 'fs';
 import { resolve } from 'path';
 import { compileToReadableStream } from './compiler/server';
 import { BuildSourceJsx } from './build';
+import { createPageContextFromPage } from './utils/createPageContextFromPage';
+import { render } from './render/server';
 
 
 
@@ -76,7 +78,9 @@ router.GET("/*main", async (context) =>{
     if(!path){
         console.log("/")
     }
-    const Html = await renderReactComponent(context.req,path);
+    const pageContext = await createPageContextFromPage({ req: context.req, url: path})
+    
+    const Html = (await render(pageContext)).html;
     return new Response(Html, {
         headers: {
             "Content-Type": parseContentType('html')
@@ -90,6 +94,22 @@ Bun.serve({
     port: 3000,
     fetch
 })
+rmdirSync(resolve('./dist'), {recursive: true})
+const outs = await Bun.build({
+    entrypoints: BuildSourceJsx('./render'),
+    outdir: 'dist/render',
+    sourcemap: 'external',
+    splitting: true,
+    external: ['react'],
+    naming: "[dir]/[name].[ext]",
+    publicPath: 'mppp.com'
+    // minify: {
+    //     whitespace: true,
+    //     identifiers: true,
+    //     syntax: true
+    // }
+})
+console.log(outs)
 
 const watchPages = watch(resolve('./pages'), { recursive: true }, (event, filename)=>{
     console.log(`${filename} 更新`)
@@ -99,7 +119,7 @@ const watchPages = watch(resolve('./pages'), { recursive: true }, (event, filena
         sourcemap: 'external',
         splitting: true,
         external: ['react'],
-        naming: "[dir]/[name]-[hash].[ext]",
+        naming: "[dir]/[name].[ext]",
         minify: {
             whitespace: true,
             identifiers: true,

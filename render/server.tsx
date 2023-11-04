@@ -1,4 +1,4 @@
-import { renderToReadableStream, renderToString } from "react-dom/server";
+import { renderToString } from "react-dom/server";
 import { PageContext } from "./types";
 import { PageShell } from "./PageShell";
 
@@ -9,29 +9,34 @@ import { PageShell } from "./PageShell";
  * @returns 
  */
 export async function render(pageContext: PageContext) {
-    const { Page, PageProps, ...context } = pageContext
-    let pageHtml
-    if (!Page) {
-        // SPA
-        pageHtml = ''
-      } else {
-        // SSR / HTML-only
-        pageHtml = await renderToReadableStream(
-            <PageShell pageContext={pageContext}>//服务端传入的上下文，这个上下文将从tsx文件中获取
-                <Page {...PageProps} />
-            </PageShell>
-            
-        )
-      }
-     return {
-        html: `<!DOCTYPE html>
+  const { Page, PageProps, ...context } = pageContext
+  let pageHtml
+  if (!Page) {
+    // SPA
+    pageHtml = ''
+  } else {
+    // SSR / HTML-only
+    pageHtml = renderToString(
+      <PageShell pageContext={pageContext}>
+        <Page {...PageProps} />
+      </PageShell>
+    )
+  }
+  let scripts = []
+   //build
+   
+  /**
+   * 引入打包后的reactjs， reactdomjs，注入代码调用客户端的render
+   */
+  return {
+    html: `<!DOCTYPE html>
         <html>
           <body>
-            <div id="react-container">${pageHtml}</div>
+            <div id="root">${pageHtml}</div>
           </body>
         </html>`,
-        pageContext: context
-     }
+    pageContext: context
+  }
 }
 
 //调用renderBefore得到props传入组件

@@ -1,6 +1,6 @@
-import { PageContext } from "./types";
-import { parseUrlToFilePath } from "./utils/parseUrlToFile";
-import { join } from "./utils/pathJoinInBrowser";
+import { PageContext } from "../render/types";
+import { parseUrlToFilePath } from "./parseUrlToFile";
+import { join } from "./pathJoinInBrowser";
 
 export type CreatePageContextFromPageType = {
     req?: Request,
@@ -19,7 +19,7 @@ export async function createPageContextFromPage({ req, url, ...context }: Create
     let page;
     let pageProps;
     if(req){//客户端是没有req的
-        let jsFilePath = parseUrlToFilePath({url, distDir: './dist'});
+        let jsFilePath = parseUrlToFilePath({url, distDir: './dist/pages'});
         if(jsFilePath){
             pageObject = await import(jsFilePath);
         }
@@ -30,6 +30,7 @@ export async function createPageContextFromPage({ req, url, ...context }: Create
     }
     if(pageObject){
         page = pageObject.Page;//取出页面的对应函数
+        if(pageObject.getProps)
         pageProps = await pageObject.getProps(context);//后台的context会传给该函数
     }
     return {
